@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Health Prediction</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background: #f4f7fb;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 900px;
+        background: white;
+        padding: 35px;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+        color: #222;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #777;
+        margin-bottom: 30px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .input-box {
+        display: flex;
+        flex-direction: column;
+      }
+
+      label {
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        outline: none;
+        font-size: 15px;
+        transition: 0.3s;
+      }
+
+      input:focus,
+      select:focus {
+        border-color: #2874f0;
+        box-shadow: 0 0 0 3px rgba(40, 116, 240, 0.1);
+      }
+
+      .button-box {
+        margin-top: 25px;
+        display: flex;
+        gap: 15px;
+      }
+
+      button {
+        flex: 1;
+        border: none;
+        padding: 14px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .predict-btn {
+        background: #2874f0;
+        color: white;
+      }
+
+      .predict-btn:hover {
+        background: #1d5fcc;
+      }
+
+      .reset-btn {
+        background: #eeeeee;
+        color: #333;
+      }
+
+      .reset-btn:hover {
+        background: #dddddd;
+      }
+
+      .result {
+        margin-top: 30px;
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+      }
+
+      .healthy {
+        background: #e8f8ee;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+      }
+
+      .unhealthy {
+        background: #fff1f1;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+      }
+
+      .result h2 {
+        margin-bottom: 8px;
+      }
+
+      .confidence {
+        font-size: 14px;
+        margin-top: 5px;
+      }
+
+      @media (max-width: 700px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .container {
+          padding: 25px 20px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Health Prediction System</h1>
+
+      <p class="subtitle">Enter your health information for prediction</p>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-grid">
+          <div class="input-box">
+            <label>Age</label>
+
+            <input type="number" name="age" min="1" max="120" required />
+          </div>
+
+          <div class="input-box">
+            <label>Gender</label>
+
+            <select name="gender" required>
+              <option value="">Select Gender</option>
+
+              <option value="Male">Male</option>
+
+              <option value="Female">Female</option>
+            </select>
+          </div>
+
+          <div class="input-box">
+            <label>Height (cm)</label>
+
+            <input
+              type="number"
+              step="0.1"
+              name="height"
+              placeholder="Example: 170"
+              required
+            />
+          </div>
+
+          <div class="input-box">
+            <label>Weight (kg)</label>
+
+            <input
+              type="number"
+              step="0.1"
+              name="weight"
+              placeholder="Example: 65"
+              required
+            />
+          </div>
+
+          <div class="input-box">
+            <label>Blood Pressure</label>
+
+            <input
+              type="number"
+              step="0.1"
+              name="blood_pressure"
+              placeholder="Example: 120"
+              required
+            />
+          </div>
+
+          <div class="input-box">
+            <label>Cholesterol</label>
+
+            <input
+              type="number"
+              step="0.1"
+              name="cholesterol"
+              placeholder="Example: 180"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="button-box">
+          <button type="submit" class="predict-btn">Predict Health</button>
+
+          <button type="reset" class="reset-btn">Reset</button>
+        </div>
+      </form>
+
+      {% if prediction %}
+
+      <div
+        class="result {% if prediction == 'Healthy' %}healthy{% else %}unhealthy{% endif %}"
+      >
+        <h2>Prediction: {{ prediction }}</h2>
+
+        <p class="confidence">Model Confidence: {{ confidence }}%</p>
+      </div>
+
+      {% endif %}
+    </div>
+  </body>
+</html>
